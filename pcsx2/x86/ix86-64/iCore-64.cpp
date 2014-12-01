@@ -12,7 +12,7 @@
  *  You should have received a copy of the GNU General Public License along with PCSX2.
  *  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __x86_64__
+#ifdef __x86_64__
 #include "PrecompiledHeader.h"
 
 #include "System.h"
@@ -155,7 +155,8 @@ int _getFreeX86reg(int mode)
 	}
 
 	pxFailDev( "x86 register allocation error" );
-	throw Exception::FailedToAllocateRegister();
+
+	return -1;
 }
 
 void _flushCachedRegs()
@@ -541,7 +542,7 @@ int  _getFreeMMXreg()
 	}
 
 	pxFailDev( "mmx register allocation error" );
-	throw Exception::FailedToAllocateRegister();
+	return -1;
 }
 
 int _allocMMXreg(int mmxreg, int reg, int mode)
@@ -582,8 +583,7 @@ int _allocMMXreg(int mmxreg, int reg, int mode)
 		}
 	}
 
-	if (mmxreg == -1)
-		mmxreg = _getFreeMMXreg();
+	if (mmxreg == -1) mmxreg = _getFreeMMXreg();
 
 	mmxregs[mmxreg].inuse = 1;
 	mmxregs[mmxreg].reg = reg;
@@ -849,7 +849,11 @@ void SetFPUstate() {
 	_freeMMXreg(7);
 
 	if (x86FpuState == MMX_STATE) {
-		EMMS();
+		if (x86caps.has3DNOWInstructionExtensions)
+			FEMMS();
+		else
+			EMMS();
+
 		x86FpuState = FPU_STATE;
 	}
 }

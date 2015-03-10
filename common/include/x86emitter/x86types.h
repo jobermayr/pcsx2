@@ -19,6 +19,10 @@
 static const uint iREGCNT_XMM = 8;
 static const uint iREGCNT_GPR = 8;
 static const uint iREGCNT_MMX = 8;
+#define Rex(w, r, x, b) assert(0)
+#define RexR(w, reg) assert( !(w || (reg)>=8) )
+#define RexRB(w, reg, base) assert( !(w || (reg) >= 8 || (base)>=8) )
+#define RexB(w, base) assert( !(w || (base)>=8) )
 #else
 static const uint iREGCNT_XMM = 16;
 static const uint iREGCNT_GPR = 16;

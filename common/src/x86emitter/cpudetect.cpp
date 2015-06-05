@@ -333,21 +333,21 @@ void x86capabilities::SIMD_ExceptionTest()
 	if( CanTestInstructionSets() )
 	{
 		xSetPtr( recSSE );
-		xMOVDQU( ptr[rcx], xmm1 );
+		xMOVDQU( ptr[CX_REGISTER], xmm1 );
 		xMOVSLDUP( xmm1, xmm0 );
-		xMOVDQU( xmm1, ptr[rcx] );
+		xMOVDQU( xmm1, ptr[CX_REGISTER] );
 		xRET();
 
 		u8* funcSSSE3 = xGetPtr();
-		xMOVDQU( ptr[rcx], xmm1 );
+		xMOVDQU( ptr[CX_REGISTER], xmm1 );
 		xPABS.W( xmm1, xmm0 );
-		xMOVDQU( xmm1, ptr[rcx] );
+		xMOVDQU( xmm1, ptr[CX_REGISTER] );
 		xRET();
 
 		u8* funcSSE41 = xGetPtr();
-		xMOVDQU( ptr[rcx], xmm1 );
+		xMOVDQU( ptr[CX_REGISTER], xmm1 );
 		xBLEND.VPD( xmm1, xmm0 );
-		xMOVDQU( xmm1, ptr[rcx] );
+		xMOVDQU( xmm1, ptr[CX_REGISTER] );
 		xRET();
 
 		HostSys::MemProtectStatic( recSSE, PageAccess_ExecOnly() );

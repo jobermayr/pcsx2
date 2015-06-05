@@ -559,6 +559,11 @@ template< typename T > void xWrite( T val );
         rsi, rdi, rbp, rsp,
         r8, r9, r10, r11,
         r12, r13, r14, r15;
+        #define AX_REGISTER rax
+        #define CX_REGISTER rcx
+    #else
+        #define AX_REGISTER eax
+        #define CX_REGISTER ecx
     #endif // for the moment, keep both, only first registers may be used for now...
 	extern const xAddressReg
 		eax, ebx, ecx, edx,

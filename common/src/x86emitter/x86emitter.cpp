@@ -936,11 +936,13 @@ void xImpl_Test::operator()( const xRegister32& to, const xRegister32& from ) co
 	EmitSibMagic( from, to );
 }
 
+#ifdef __x86_64__
 void xImpl_Test::operator()( const xRegister64& to, const xRegister64& from ) const
 {
 	xWrite8( 0x85 );
 	EmitSibMagic( from, to );
 }
+#endif
 
 void xImpl_Test::operator()( const xIndirect32orLess& dest, int imm ) const
 {
@@ -963,7 +965,9 @@ void xImpl_Test::operator()( const xRegisterInt& to, int imm ) const
 	}
 	to.xWriteImm( imm );
 }
+#ifdef __x86_64__
 void xImpl_BitScan::operator()( const xRegister64& to, const xRegister64& from ) const		{ xOpWrite0F( Opcode, to, from ); }
+#endif
 void xImpl_BitScan::operator()( const xRegister32& to, const xRegister32& from ) const		{ xOpWrite0F( Opcode, to, from ); }
 void xImpl_BitScan::operator()( const xRegister16& to, const xRegister16& from ) const		{ xOpWrite0F( 0x66, Opcode, to, from ); }
 void xImpl_BitScan::operator()( const xRegister16or32& to, const xIndirectVoid& sibsrc ) const
@@ -993,7 +997,9 @@ void xImpl_IncDec::operator()( const xIndirect32orLess& to ) const
 }
 
 void xImpl_DwordShift::operator()( const xRegister32& to,	const xRegister32& from, const xRegisterCL& /* clreg */ ) const	{ xOpWrite0F( OpcodeBase+1, to, from ); }
+#ifdef __x86_64__
 void xImpl_DwordShift::operator()( const xRegister64& to,	const xRegister64& from, const xRegisterCL& /* clreg */ ) const	{ xOpWrite0F( OpcodeBase+1, to, from ); }
+#endif
 void xImpl_DwordShift::operator()( const xRegister16& to,	const xRegister16& from, const xRegisterCL& /* clreg */ ) const	{ xOpWrite0F( 0x66, OpcodeBase+1, to, from ); }
 void xImpl_DwordShift::operator()( const xRegister32& to,	const xRegister32& from, u8 shiftcnt ) const
 {
@@ -1001,11 +1007,13 @@ void xImpl_DwordShift::operator()( const xRegister32& to,	const xRegister32& fro
 		xOpWrite0F( OpcodeBase, to, from, shiftcnt );
 }
 
+#ifdef __x86_64__
 void xImpl_DwordShift::operator()( const xRegister64& to,	const xRegister64& from, u8 shiftcnt ) const
 {
 	if( shiftcnt != 0 )
 		xOpWrite0F( OpcodeBase, to, from, shiftcnt );
 }
+#endif
 
 void xImpl_DwordShift::operator()( const xRegister16& to,	const xRegister16& from, u8 shiftcnt ) const
 {
@@ -1024,6 +1032,7 @@ void xImpl_DwordShift::operator()( const xIndirectVoid& dest, const xRegister16o
 		xOpWrite0F( (from->GetOperandSize() == 2) ? 0x66 : 0x00, OpcodeBase, from, dest, shiftcnt );
 }
 
+#ifdef __x86_64__
 void xImpl_DwordShift::operator()( const xIndirectVoid& dest, const xRegister64& from, const xRegisterCL& /* clreg */ ) const
 {
 	xOpWrite0F( 0x00, OpcodeBase + 1, from, dest );
@@ -1034,6 +1043,7 @@ void xImpl_DwordShift::operator()( const xIndirectVoid& dest, const xRegister64&
 	if( shiftcnt != 0 )
 		xOpWrite0F( 0x00, OpcodeBase, from, dest, shiftcnt );
 }
+#endif
 
 const xImpl_Test		xTEST	= { };
 

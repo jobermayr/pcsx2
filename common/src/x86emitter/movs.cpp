@@ -67,6 +67,7 @@ void xImpl_Mov::operator()( const xRegister32& to, const xRegister32& from ) con
 	EmitSibMagic( from, to );
 }
 
+#ifdef __x86_64__
 void xImpl_Mov::operator()( const xRegister64& to, const xRegister64& from ) const
 {
 	if( to == from ) return;	// ignore redundant MOVs.
@@ -74,6 +75,7 @@ void xImpl_Mov::operator()( const xRegister64& to, const xRegister64& from ) con
     xWrite8( 0x89 );
 	EmitSibMagic( from, to );
 }
+#endif
 
 
 static __fi void ModRM( uint mod, uint reg, uint rm )
@@ -216,8 +218,10 @@ const xImpl_Mov xMOV;
 void xCMOV( JccComparisonType ccType, const xRegister32& to, const xRegister32& from )		{ ccSane(); xOpWrite0F( 0x40 | ccType, to, from ); }
 void xCMOV( JccComparisonType ccType, const xRegister32& to, const xIndirectVoid& sibsrc )		{ ccSane(); xOpWrite0F( 0x40 | ccType, to, sibsrc ); }
 //void xCMOV( JccComparisonType ccType, const xDirectOrIndirect32& to, const xDirectOrIndirect32& from ) const { ccSane(); _DoI_helpermess( *this, to, from ); }	// too.. lazy.. to fix.
+#ifdef __x86_64__
 void xCMOV( JccComparisonType ccType, const xRegister64& to, const xRegister64& from )		{ ccSane(); xOpWrite0F( 0x40 | ccType, to, from ); }
 void xCMOV( JccComparisonType ccType, const xRegister64& to, const xIndirectVoid& sibsrc )		{ ccSane(); xOpWrite0F( 0x40 | ccType, to, sibsrc ); }
+#endif
 
 void xCMOV( JccComparisonType ccType, const xRegister16& to, const xRegister16& from )		{ ccSane(); xOpWrite0F( 0x66, 0x40 | ccType, to, from ); }
 void xCMOV( JccComparisonType ccType, const xRegister16& to, const xIndirectVoid& sibsrc )		{ ccSane(); xOpWrite0F( 0x66, 0x40 | ccType, to, sibsrc ); }
@@ -226,8 +230,10 @@ void xCMOV( JccComparisonType ccType, const xRegister16& to, const xIndirectVoid
 void xSET( JccComparisonType ccType, const xRegister8& to )		{ ccSane(); xOpWrite0F( 0x90 | ccType, 0, to ); }
 void xSET( JccComparisonType ccType, const xIndirect8& dest )		{ ccSane(); xOpWrite0F( 0x90 | ccType, 0, dest ); }
 
+#ifdef __x86_64__
 void xImpl_CMov::operator()( const xRegister64& to, const xRegister64& from ) const					{ ccSane(); xOpWrite0F( 0x40 | ccType, to, from ); }
 void xImpl_CMov::operator()( const xRegister64& to, const xIndirectVoid& sibsrc ) const				{ ccSane(); xOpWrite0F( 0x40 | ccType, to, sibsrc ); }
+#endif
 void xImpl_CMov::operator()( const xRegister32& to, const xRegister32& from ) const					{ ccSane(); xOpWrite0F( 0x40 | ccType, to, from ); }
 void xImpl_CMov::operator()( const xRegister32& to, const xIndirectVoid& sibsrc ) const				{ ccSane(); xOpWrite0F( 0x40 | ccType, to, sibsrc ); }
 void xImpl_CMov::operator()( const xRegister16& to, const xRegister16& from ) const					{ ccSane(); xOpWrite0F( 0x66, 0x40 | ccType, to, from ); }
@@ -250,6 +256,7 @@ void xImpl_MovExtend::operator()( const xRegister16or32& to, const xRegister8& f
 	);
 }
 
+#ifdef __x86_64__
 void xImpl_MovExtend::operator()( const xRegister64& to, const xRegister8& from ) const
 {
 	EbpAssert();
@@ -260,6 +267,7 @@ void xImpl_MovExtend::operator()( const xRegister64& to, const xRegister8& from 
 		to, from
 	); // Definitely not sure about that one, It would seem coherent it stays the same, will check later. --3kinox
 }
+#endif
 
 void xImpl_MovExtend::operator()( const xRegister16or32& to, const xIndirect8& sibsrc ) const
 {
@@ -271,6 +279,7 @@ void xImpl_MovExtend::operator()( const xRegister16or32& to, const xIndirect8& s
 	);
 }
 
+#ifdef __x86_64__
 void xImpl_MovExtend::operator()( const xRegister64& to, const xIndirect8& sibsrc ) const
 {
 	EbpAssert();
@@ -281,6 +290,7 @@ void xImpl_MovExtend::operator()( const xRegister64& to, const xIndirect8& sibsr
 		to, sibsrc
 	);// Definitely not sure about that one, It would seem coherent it stays the same, will check later. --3kinox
 }
+#endif
 
 void xImpl_MovExtend::operator()( const xRegister32& to, const xRegister16& from ) const
 {
@@ -294,6 +304,7 @@ void xImpl_MovExtend::operator()( const xRegister32& to, const xIndirect16& sibs
 	xOpWrite0F( SignExtend ? 0xbf : 0xb7, to, sibsrc );
 }
 
+#ifdef __x86_64__
 void xImpl_MovExtend::operator()( const xRegister64& to, const xRegister16& from ) const
 {
 	EbpAssert();
@@ -305,6 +316,7 @@ void xImpl_MovExtend::operator()( const xRegister64& to, const xIndirect16& sibs
 	EbpAssert();
 	xOpWrite0F( SignExtend ? 0xbf : 0xb7, to, sibsrc );
 }
+#endif
 
 #if 0
 void xImpl_MovExtend::operator()( const xRegister32& to, const xDirectOrIndirect16& src ) const

@@ -25,6 +25,9 @@
 
 #pragma once
 
+#ifndef STDAFX_H_
+#define STDAFX_H_
+
 #include "config.h"
 
 #ifdef _WINDOWS
@@ -522,3 +525,5 @@ const std::string root_hw("c:\\temp2\\_");
 const std::string root_sw("/tmp/GS_SW_dump/");
 const std::string root_hw("/tmp/GS_HW_dump/");
 #endif
+
+#endif // STDAFX_H_
